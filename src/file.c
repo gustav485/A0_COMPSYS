@@ -32,6 +32,6 @@ int main(int argc, char* argv[]) {
       openFile(argv[1]);
       return retval;
     }
-    fprintf(stdout, "No eliglbe file to be read\n");
+    fprintf(stdout, "Usage: file path\n");
     return EXIT_FAILURE;
 }
