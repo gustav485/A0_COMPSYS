@@ -7,11 +7,12 @@ int print_hello_world(void) {
     return fprintf(stdout, "Hello, worlddfghjkl!\n");
 }
 
-int openFile(void) {
+int openFile(char* filename) {
     FILE *fptr;
-    fptr = fopen("test_files/ascii.input", "r");
-    if (fptr==NULL){
-        fprintf(stdout,"Not able to open the file\n");
+    fptr = fopen(filename, "r");
+    if (fptr == NULL){
+        fprintf(stdout, "Not able to open the file\n");
+        return EXIT_FAILURE;
     }
     char stringStore[100];
     fgets(stringStore, 100, fptr);
@@ -20,14 +21,13 @@ int openFile(void) {
     return 1;
 }
 
-int main(void) {
+int main(int argc, char* argv[]) {
     int retval = EXIT_SUCCESS;
-    if (openFile() >= 0) {
-      return 1;
-    }
-    if (print_hello_world() <= 0) {
-        retval = EXIT_FAILURE;
-    }
 
-    return retval;
+    if (argc == 2) {
+      openFile(argv[1]);
+      return retval;
+    }
+    fprintf(stdout, "No eliglbe file to be read\n");
+    return EXIT_FAILURE;
 }
