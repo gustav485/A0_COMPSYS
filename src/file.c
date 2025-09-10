@@ -15,8 +15,12 @@ int openFile(char* filename) {
         return EXIT_FAILURE;
     }
     char stringStore[100];
-    fgets(stringStore, 100, fptr);
-    fprintf(stdout,"%s\n", stringStore);
+    while (fgets(stringStore,100,fptr)){
+        fprintf(stdout, "%s\n", stringStore);
+    }
+    // char stringStore[100];
+    // fgets(stringStore, 100, fptr);
+    // fprintf(stdout,"%s\n", stringStore);
     fclose(fptr);
     return 1;
 }
