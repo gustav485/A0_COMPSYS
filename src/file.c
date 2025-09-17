@@ -1,67 +1,51 @@
-#include <stdio.h>  // fprintf, stdout, stderr.
-#include <stdlib.h> // exit, EXIT_FAILURE, EXIT_SUCCESS.
-#include <string.h> // strerror.
-#include <errno.h>  // errno.
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <errno.h>
 
-int print_hello_world(void) {
-    return fprintf(stdout, "Hello, worlddfghjkl!\n");
-}
-
-int openFile(char* filename) {
-    FILE *fptr;
-    int c, i, max;
-    int filetype = 9;
-
-    fptr = fopen(filename, "rb");
-
-    if (fptr == NULL){
+size_t openFile(char* filename, unsigned char *buffer, size_t maxsize) {
+    FILE *fptr = fopen(filename, "rb");
+    if (fptr == NULL) {
         fprintf(stdout, "Not able to open the file\n");
         return EXIT_FAILURE;
     }
-    for (i = 0, max = 4900; i < max && (c = getc(fptr)) != EOF; i++) {
-        printf("%02x", c);
-        if (i % 16 == 15)
-            putchar('\n'); 
-        else if (i % 2 == 1)
-            putchar(' ');  
-        if (c > 127)
-            filetype = 1;
-    }
-    if (i == 0){
-        return -1;
-    }
-    if (i % 16 != 0)
-        putchar('\n'); 
 
-
+    size_t numberOfBytes = fread(buffer, 1, maxsize, fptr);
     fclose(fptr);
-    return filetype;
+    return numberOfBytes;
+}
+
+int analyzeFile(unsigned char *buffer, size_t numberOfBytes) {
+    if (numberOfBytes == 0) return -1; 
+    for (size_t i = 0; i < numberOfBytes; i++) {
+        if (buffer[i] > 127) return 0; 
+    }
+    return 1;
 }
 
 int main(int argc, char* argv[]) {
-    int retval = EXIT_SUCCESS;
-
-    if (argc == 2) {
-        int filedata = openFile(argv[1]);
-        switch (filedata){
-            case -1:
-                printf("File is empty\n");
-                break;
-            case 0:
-                printf("File is ISO-8859\n");
-                break;
-            case 1:
-                printf("File is ASCII\n");
-                break;
-            case 9:
-                printf("N/A, cannot determine\n");
-                break;
-            default:
-                printf("Andet format end ASCII\n");
-                break;
-        }
-        return retval;
+    if (argc != 2) {
+        fprintf(stdout, "Usage: file path\n");
+        return EXIT_FAILURE;
     }
-    fprintf(stdout, "Usage: file path\n");
-    return EXIT_FAILURE;
+
+    unsigned char buffer[4900];
+    size_t numberOfBytes = openFile(argv[1], buffer, sizeof(buffer));
+    int filetype = analyzeFile(buffer, numberOfBytes);
+
+    switch (filetype) {
+        case -1: 
+            printf("File is empty\n"); 
+            break;
+        case 0:  
+            printf("File is ISO-8859\n"); 
+            break;
+        case 1:  
+            printf("File is ASCII\n"); 
+            break;
+        default: 
+            printf("Data file detected\n"); 
+            break;
+    }
+    return EXIT_SUCCESS;
 }
