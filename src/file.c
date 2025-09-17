@@ -25,7 +25,7 @@ int openFile(char* filename) {
         else if (i % 2 == 1)
             putchar(' ');  
         if (c > 127)
-            filetype = 2;
+            filetype = 1;
     }
     if (i == 0){
         return -1;
@@ -48,7 +48,7 @@ int main(int argc, char* argv[]) {
                 printf("File is empty\n");
                 break;
             case 0:
-                printf("File is ISO-8859");
+                printf("File is ISO-8859\n");
                 break;
             case 1:
                 printf("File is ASCII\n");
