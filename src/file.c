@@ -10,9 +10,7 @@ int print_hello_world(void) {
 int openFile(char* filename) {
     FILE *fptr;
     int c, i, max;
-    int is_ascii = 1;
-    int is_iso = 1;
-    int is_utf = 1;
+    int filetype = 9;
 
     fptr = fopen(filename, "rb");
 
@@ -27,20 +25,17 @@ int openFile(char* filename) {
         else if (i % 2 == 1)
             putchar(' ');  
         if (c > 127)
-            is_ascii = 0;
+            filetype = 2;
     }
     if (i == 0){
-        printf("File is empty\n");
-        return EXIT_SUCCESS;
+        return -1;
     }
     if (i % 16 != 0)
-        putchar('\n');  // output a newline if needed
+        putchar('\n'); 
 
 
     fclose(fptr);
-    return is_ascii;
-    return is_iso;
-    return is_utf;
+    return filetype;
 }
 
 int main(int argc, char* argv[]) {
@@ -49,14 +44,20 @@ int main(int argc, char* argv[]) {
     if (argc == 2) {
         int filedata = openFile(argv[1]);
         switch (filedata){
+            case -1:
+                printf("File is empty\n");
+                break;
             case 0:
-                printf("File is ASCII");
+                printf("File is ISO-8859");
                 break;
             case 1:
-                printf("File is not ASCII");
+                printf("File is ASCII\n");
+                break;
+            case 9:
+                printf("N/A, cannot determine\n");
                 break;
             default:
-                printf("Andet format end ASCII");
+                printf("Andet format end ASCII\n");
                 break;
         }
         return retval;
