@@ -16,6 +16,14 @@ printf "Hello, World!\n" > test_files/ascii.input
 printf "Hello, World!" > test_files/ascii2.input
 printf "Hello,\x00World!\n" > test_files/data.input
 printf "" > test_files/empty.input
+printf "ISO test: \xC6\xD8\xC5\n" > test_files/iso.input
+printf "This is secret\n" > test_files/secretFile.input
+chmod -r test_files/secretFile.input
+yes "ABCDEFGHIJKLMNOPQRSTUVWXYZ" | head -n 100 > test_files/large_ascii.input
+printf "     \n\t    \n" > test_files/whitespace.input
+head -c 64 /dev/urandom > test_files/random.input
+head -c 10 < /dev/zero > test_files/zeros.input
+printf "\xFF\xFE\xFD\n" > test_files/highbit.input
 ### TODO: Generate more test files ###
 
 
